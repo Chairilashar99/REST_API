@@ -7,6 +7,7 @@ const multer = require('multer');
 
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
+const socket = require('./socket');
 
 const app = express();
 
@@ -65,6 +66,10 @@ mongoose
     "mongodb+srv://Chairilashar:w2pqIwLjtLu0Ekqf@cluster0.dccacst.mongodb.net/messages?authMechanism=DEFAULT"
   )
   .then(result => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('./socket').init(server);
+    io.on('connection', socket => {
+      console.log('Client connected');
+    });
   })
   .catch(err => console.log(err));
